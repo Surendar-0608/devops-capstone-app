@@ -71,7 +71,18 @@ const uptime = formatUptime(os.uptime());
     </head>
     <body>
 
-        <h1>🚀 DevOps Command Center</h1>
+        <h1>🚀 Surendar's DevOps CI/CD Automation Platform </h1>
+
+<div class="card" style="margin-bottom:20px;">
+    <div class="title">Project Overview</div>
+    <p>This project demonstrates a complete end-to-end DevOps automation pipeline built and deployed on AWS.</p>
+    <p>✔ GitHub Webhook Triggered CI/CD</p>
+    <p>✔ Jenkins Automated Build & Deployment</p>
+    <p>✔ Docker Containerization</p>
+    <p>✔ EC2 Cloud Deployment</p>
+    <p>✔ Prometheus Monitoring & Grafana Dashboard</p>
+    <p>✔ Automated Log Backup using Cron</p>
+</div>
 
         <div class="grid">
 
@@ -94,7 +105,7 @@ const uptime = formatUptime(os.uptime());
             <div class="card">
                 <div class="title">Resource Usage</div>
                 <p>Total Memory: <span class="badge">${totalMem.toFixed(2)} MB</span></p>
-                <p>Used Memory: <span class="badge">${usedMem} MB</span></p>
+                <p>Used Memory: <span class="badge">${usedMem.toFixed(2)} MB</span></p>
                 <p>Free Memory: <span class="badge">${freeMem.toFixed(2)} MB</span></p>
             </div>
 
