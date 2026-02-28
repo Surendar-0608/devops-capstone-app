@@ -1,48 +1,107 @@
 const express = require('express');
 const os = require('os');
-const app = express();
+const axios = require('axios');
 
+const app = express();
 const PORT = 3000;
 
 const VERSION = process.env.APP_VERSION || "1.0.0";
 const ENVIRONMENT = process.env.NODE_ENV || "Production";
 const BUILD_TIME = process.env.BUILD_TIME || new Date().toISOString();
 
-app.get('/', (req, res) => {
+function formatUptime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+}
+
+app.get('/', async (req, res) => {
+    const totalMem = os.totalmem() / (1024 * 1024);
+    const freeMem = os.freemem() / (1024 * 1024);
+    const usedMem = (totalMem - freeMem).toFixed(2);
+
+    const cpuCores = os.cpus().length;
+    const uptime = formatUptime(os.uptime());
+
     res.send(`
     <html>
     <head>
-        <title>DevOps CI/CD Dashboard</title>
+        <title>DevOps Command Center</title>
+        <meta http-equiv="refresh" content="5">
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: Arial;
                 background: #0f172a;
                 color: white;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
                 text-align: center;
-                padding-top: 50px;
+                color: #38bdf8;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                margin-top: 30px;
             }
             .card {
                 background: #1e293b;
-                padding: 30px;
-                margin: auto;
-                width: 50%;
+                padding: 20px;
                 border-radius: 12px;
-                box-shadow: 0 0 20px rgba(0,0,0,0.5);
+                box-shadow: 0 0 15px rgba(0,0,0,0.4);
             }
-            h1 { color: #38bdf8; }
-            p { font-size: 18px; }
-            .highlight { color: #22c55e; font-weight: bold; }
+            .title {
+                color: #22c55e;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .badge {
+                color: #22c55e;
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>
-        <div class="card">
-            <h1>🚀 DevOps CI/CD Live Deployment</h1>
-            <p>Application Version: <span class="highlight">${VERSION}</span></p>
-            <p>Build Time: <span class="highlight">${BUILD_TIME}</span></p>
-            <p>Environment: <span class="highlight">${ENVIRONMENT}</span></p>
-            <p>Server Hostname: <span class="highlight">${os.hostname()}</span></p>
-            <p>Status: <span class="highlight">Healthy ✅</span></p>
+
+        <h1>🚀 DevOps Command Center</h1>
+
+        <div class="grid">
+
+            <div class="card">
+                <div class="title">CI/CD Information</div>
+                <p>Version: <span class="badge">${VERSION}</span></p>
+                <p>Build Time: <span class="badge">${BUILD_TIME}</span></p>
+                <p>Environment: <span class="badge">${ENVIRONMENT}</span></p>
+                <p>Pipeline Status: <span class="badge">SUCCESS ✅</span></p>
+            </div>
+
+            <div class="card">
+                <div class="title">Server Information</div>
+                <p>Hostname: <span class="badge">${os.hostname()}</span></p>
+                <p>Platform: <span class="badge">${os.platform()}</span></p>
+                <p>Uptime: <span class="badge">${uptime}</span></p>
+                <p>CPU Cores: <span class="badge">${cpuCores}</span></p>
+            </div>
+
+            <div class="card">
+                <div class="title">Resource Usage</div>
+                <p>Total Memory: <span class="badge">${totalMem.toFixed(2)} MB</span></p>
+                <p>Used Memory: <span class="badge">${usedMem} MB</span></p>
+                <p>Free Memory: <span class="badge">${freeMem.toFixed(2)} MB</span></p>
+            </div>
+
+            <div class="card">
+                <div class="title">Monitoring</div>
+                <p>Prometheus: <span class="badge">Running ✅</span></p>
+                <p>Grafana: <span class="badge">Running ✅</span></p>
+                <p><a href="/health" style="color:#38bdf8;">Health Endpoint</a></p>
+                <p><a href="/metrics" style="color:#38bdf8;">Metrics Endpoint</a></p>
+            </div>
+
         </div>
+
     </body>
     </html>
     `);
