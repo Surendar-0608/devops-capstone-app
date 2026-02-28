@@ -16,6 +16,11 @@ function formatUptime(seconds) {
 }
 
 app.get('/', async (req, res) => {
+    const loadAvg = os.loadavg()[0].toFixed(2);
+    const memoryPercent = ((usedMem / totalMem) * 100).toFixed(2);
+    const processId = process.pid;
+    const containerId = os.hostname();
+    const deploymentTime = BUILD_TIME;
     const totalMem = os.totalmem() / (1024 * 1024);
     const freeMem = os.freemem() / (1024 * 1024);
     const usedMem = (totalMem - freeMem).toFixed(2);
@@ -99,6 +104,21 @@ app.get('/', async (req, res) => {
                 <p><a href="/health" style="color:#38bdf8;">Health Endpoint</a></p>
                 <p><a href="/metrics" style="color:#38bdf8;">Metrics Endpoint</a></p>
             </div>
+
+<div class="card">
+    <div class="title">Deployment Details</div>
+    <p>Container ID: <span class="badge">${containerId}</span></p>
+    <p>Process ID: <span class="badge">${processId}</span></p>
+    <p>Last Deployment: <span class="badge">${deploymentTime}</span></p>
+    <p>Auto Refresh: <span class="badge">Every 5 seconds</span></p>
+</div>
+
+<div class="card">
+    <div class="title">DevOps Pipeline Flow</div>
+    <p>GitHub ➜ Jenkins ➜ Docker Hub ➜ EC2 ➜ Prometheus ➜ Grafana</p>
+    <p>Status: <span class="badge">Fully Automated ✅</span></p>
+</div>
+
 
         </div>
 
