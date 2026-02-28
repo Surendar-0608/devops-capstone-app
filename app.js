@@ -16,18 +16,19 @@ function formatUptime(seconds) {
 }
 
 app.get('/', async (req, res) => {
-    const loadAvg = os.loadavg()[0].toFixed(2);
-    const memoryPercent = ((usedMem / totalMem) * 100).toFixed(2);
-    const processId = process.pid;
-    const containerId = os.hostname();
-    const deploymentTime = BUILD_TIME;
-    const totalMem = os.totalmem() / (1024 * 1024);
-    const freeMem = os.freemem() / (1024 * 1024);
-    const usedMem = (totalMem - freeMem).toFixed(2);
+const loadAvg = os.loadavg()[0].toFixed(2);
 
-    const cpuCores = os.cpus().length;
-    const uptime = formatUptime(os.uptime());
+const totalMem = os.totalmem() / (1024 * 1024);
+const freeMem = os.freemem() / (1024 * 1024);
+const usedMem = totalMem - freeMem;
+const memoryPercent = ((usedMem / totalMem) * 100).toFixed(2);
 
+const processId = process.pid;
+const containerId = os.hostname();
+const deploymentTime = BUILD_TIME;
+
+const cpuCores = os.cpus().length;
+const uptime = formatUptime(os.uptime());
     res.send(`
     <html>
     <head>
