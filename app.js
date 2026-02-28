@@ -75,7 +75,7 @@ const uptime = formatUptime(os.uptime());
 
 <div class="card" style="margin-bottom:20px;">
     <div class="title">Project Overview</div>
-    <p>This project demonstrates a complete end-to-end DevOps automation pipeline built and deployed on AWS.</p>
+    <p> This project demonstrates a fully automated end-to-end DevOps CI/CD pipeline deployed on AWS with real-time monitoring and infrastructure automation.</p>
     <p>✔ GitHub Webhook Triggered CI/CD</p>
     <p>✔ Jenkins Automated Build & Deployment</p>
     <p>✔ Docker Containerization</p>
@@ -83,7 +83,15 @@ const uptime = formatUptime(os.uptime());
     <p>✔ Prometheus Monitoring & Grafana Dashboard</p>
     <p>✔ Automated Log Backup using Cron</p>
 </div>
-
+<div class="card">
+    <div class="title">Technology Stack</div>
+    <p>Backend: Node.js + Express</p>
+    <p>Containerization: Docker</p>
+    <p>CI/CD: Jenkins + GitHub Webhooks</p>
+    <p>Cloud: AWS EC2</p>
+    <p>Monitoring: Prometheus + Grafana</p>
+    <p>Automation: Linux Cron Jobs</p>
+</div>
         <div class="grid">
 
             <div class="card">
