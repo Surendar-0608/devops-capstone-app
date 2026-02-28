@@ -1,45 +1,57 @@
 const express = require('express');
-const client = require('prom-client');
-
+const os = require('os');
 const app = express();
-const port = 3000;
 
-// Create a Registry
-const register = new client.Registry();
-client.collectDefaultMetrics({ register });
+const PORT = 3000;
 
-// Custom HTTP request counter
-const httpRequestCounter = new client.Counter({
-  name: 'http_requests_total',
-  help: 'Total number of HTTP requests',
-});
-register.registerMetric(httpRequestCounter);
+const VERSION = process.env.APP_VERSION || "1.0.0";
+const ENVIRONMENT = process.env.NODE_ENV || "Production";
+const BUILD_TIME = process.env.BUILD_TIME || new Date().toISOString();
 
-// Middleware to count requests
-app.use((req, res, next) => {
-  httpRequestCounter.inc();
-  next();
-});
-
-// Routes
 app.get('/', (req, res) => {
-  res.send('DevOps Capstone App - Monitoring Enabled 🚀');
-});
-
-app.get('/about', (req, res) => {
-  res.send('About Page - CI/CD + Monitoring Project');
+    res.send(`
+    <html>
+    <head>
+        <title>DevOps CI/CD Dashboard</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: #0f172a;
+                color: white;
+                text-align: center;
+                padding-top: 50px;
+            }
+            .card {
+                background: #1e293b;
+                padding: 30px;
+                margin: auto;
+                width: 50%;
+                border-radius: 12px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            }
+            h1 { color: #38bdf8; }
+            p { font-size: 18px; }
+            .highlight { color: #22c55e; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <h1>🚀 DevOps CI/CD Live Deployment</h1>
+            <p>Application Version: <span class="highlight">${VERSION}</span></p>
+            <p>Build Time: <span class="highlight">${BUILD_TIME}</span></p>
+            <p>Environment: <span class="highlight">${ENVIRONMENT}</span></p>
+            <p>Server Hostname: <span class="highlight">${os.hostname()}</span></p>
+            <p>Status: <span class="highlight">Healthy ✅</span></p>
+        </div>
+    </body>
+    </html>
+    `);
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'UP' });
+    res.json({ status: "UP" });
 });
 
-// Metrics endpoint
-app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', register.contentType);
-  res.end(await register.metrics());
-});
-
-app.listen(port, () => {
-  console.log(`App running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
